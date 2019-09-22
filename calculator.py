@@ -25,4 +25,3 @@ elif c == 'div':
         print('Деление на 0!')
     if b != 0.0:
         print(a // b)
-
