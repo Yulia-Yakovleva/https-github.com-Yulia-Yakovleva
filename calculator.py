@@ -1,3 +1,4 @@
+print('Введите значения:')
 a = float(input())
 c = input()
 b = float(input())
