@@ -1,6 +1,5 @@
 from Bio.Blast.Applications import NcbiblastpCommandline
 import glob
-from Bio.Blast import NCBIXML
 
 faa_files = glob.glob("/Bmo/jyakovleva/metavirome/marine_and_seawater_metagenome/domtblout_to_prot/*.fasta")
 for pth in faa_files:
