@@ -48,3 +48,4 @@ class Rna(Dna):
                     raise ValueError('The sequence contains invalid characters')
                 else:
                     self.seq = user_seq.upper()
+                    
