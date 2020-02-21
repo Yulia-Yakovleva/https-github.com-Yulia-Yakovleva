@@ -2,14 +2,28 @@ import argparse
 import os.path
 
 parser = argparse.ArgumentParser(description='Process arguments from user')
-parser.add_argument('-min', '--min_length', type=int, help='minimum read length to survive filtration')
-parser.add_argument('-k', '--keep_filtered', action='store_true',
-                    help='Save reads that do not pass filtering into a separate file')
-parser.add_argument('-o', '--output_base_name', help='Specify the prefix of output files')
-parser.add_argument('-gc', '--gc_bounds', type=int, nargs='*',
-                    help='Number or range of GC-content in reads for surviving. '
-                         'One value to indicate a lower threshold.'
-                         'Two values to set the minimum and maximum percentage.')
+parser.add_argument(
+    '-min',
+    '--min_length',
+    type=int,
+    help='minimum read length to survive filtration')
+parser.add_argument(
+    '-k',
+    '--keep_filtered',
+    action='store_true',
+    help='Save reads that do not pass filtering into a separate file')
+parser.add_argument(
+    '-o',
+    '--output_base_name',
+    help='Specify the prefix of output files')
+parser.add_argument(
+    '-gc',
+    '--gc_bounds',
+    type=int,
+    nargs='*',
+    help='Number or range of GC-content in reads for surviving. '
+    'One value to indicate a lower threshold.'
+    'Two values to set the minimum and maximum percentage.')
 parser.add_argument('input_file', help='Input FASTQ file')
 args = parser.parse_args()
 
@@ -37,7 +51,8 @@ def gc_content(sequence):
 
 
 def gc_bounds(bounds_list, sequence):
-    bounds_list.sort()  # отсортируем на всякий случай, если юзер перепутает местами большее и меньшее значение
+    # отсортируем на всякий случай, если юзер перепутает местами большее и меньшее значение
+    bounds_list.sort()
     if len(bounds_list) == 0:
         pass  # нам ведь просто с этим ничего не надо делать...
     if len(bounds_list) > 2:
@@ -48,7 +63,8 @@ def gc_bounds(bounds_list, sequence):
         else:
             return 'loser', sequence
     if len(bounds_list) == 2:
-        if (gc_content(sequence) <= bounds_list[1]) and (gc_content(sequence) >= bounds_list[0]):
+        if (gc_content(sequence) <= bounds_list[1]) and (
+                gc_content(sequence) >= bounds_list[0]):
             return sequence, 'loser'
         else:
             return 'loser', sequence
@@ -58,7 +74,9 @@ if not args.output_base_name:  # разбираемся с названием п
     args.output_base_name = args.input_file.rstrip('.fastq')
     print(args.output_base_name + ' processing... Wait...')
 
-if os.path.exists(args.output_base_name + '_passed.fq'):  # проверка предсуществующих файлов
+if os.path.exists(
+        args.output_base_name +
+        '_passed.fq'):  # проверка предсуществующих файлов
     os.remove(args.output_base_name + '_passed.fq')
 if os.path.exists(args.output_base_name + '_failed.fq'):
     os.remove(args.output_base_name + '_failed.fq')
@@ -105,4 +123,3 @@ with open(args.input_file, "r") as in_f:  # читаем наш fastq файл
         if args.gc_bounds and not args.keep_filtered and not args.min_length:  # для ГЦ-контента без сохранения
             if gc_bounds(args.gc_bounds, record[1])[0] != 'loser':
                 write_records(f"{args.output_base_name}_passed.fq", record)
-                
