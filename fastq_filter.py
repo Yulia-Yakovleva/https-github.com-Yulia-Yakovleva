@@ -72,7 +72,7 @@ with open(args.input_file, "r") as in_f:  # читаем наш fastq файл
 
         record = name, seq, quality  # пусть это будет одним рекордом, не хочу ничего потерять
 
-        ## исполнение команд ###
+        # исполнение команд #
 
         if args.min_length and args.gc_bounds and not args.keep_filtered:  # сувмещаем без сохранения
             if (gc_bounds(args.gc_bounds, record[1])[0] != 'loser') and \
@@ -105,3 +105,4 @@ with open(args.input_file, "r") as in_f:  # читаем наш fastq файл
         if args.gc_bounds and not args.keep_filtered and not args.min_length:  # для ГЦ-контента без сохранения
             if gc_bounds(args.gc_bounds, record[1])[0] != 'loser':
                 write_records(f"{args.output_base_name}_passed.fq", record)
+                
