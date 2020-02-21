@@ -1,5 +1,5 @@
 import argparse
-import  os.path
+import os.path
 
 parser = argparse.ArgumentParser(description='Process arguments from user')
 parser.add_argument('-min', '--min_length', type=int, help='minimum read length to survive filtration')
@@ -48,18 +48,17 @@ def gc_bounds(bounds_list, sequence):
         else:
             return 'loser', sequence
     if len(bounds_list) == 2:
-        if (gc_content(sequence) >= bounds_list[1]) and (gc_content(sequence) <= bounds_list[0]):
+        if (gc_content(sequence) <= bounds_list[1]) and (gc_content(sequence) >= bounds_list[0]):
             return sequence, 'loser'
         else:
             return 'loser', sequence
 
 
-if not args.output_base_name:   # разбираемся с названием по умолчанию
+if not args.output_base_name:  # разбираемся с названием по умолчанию
     args.output_base_name = args.input_file.rstrip('.fastq')
     print(args.output_base_name + ' processing... Wait...')
 
-
-if os.path.exists(args.output_base_name + '_passed.fq'):    # проверка предсуществующих файлов
+if os.path.exists(args.output_base_name + '_passed.fq'):  # проверка предсуществующих файлов
     os.remove(args.output_base_name + '_passed.fq')
 if os.path.exists(args.output_base_name + '_failed.fq'):
     os.remove(args.output_base_name + '_failed.fq')
@@ -73,35 +72,36 @@ with open(args.input_file, "r") as in_f:  # читаем наш fastq файл
 
         record = name, seq, quality  # пусть это будет одним рекордом, не хочу ничего потерять
 
-        ### исполнение команд ###
+        ## исполнение команд ###
 
-        if args.min_length and args.keep_filtered:  # дли минимальной длины с сохранением
-            if minlen(args.min_length, record[1])[0] != 'loser':
-                write_records(f"{args.output_base_name}_passed.fq", record)
-            else:
-                write_records(f"{args.output_base_name}_failed.fq", record)
-
-        if args.min_length:  # для минимальной длины
-            if minlen(args.min_length, record[1])[0] != 'loser':
-                write_records(f"{args.output_base_name}_passed.fq", record)
-
-        if args.gc_bounds and args.keep_filtered:  # для ГЦ-контента с сохранинением
-            if gc_bounds(args.gc_bounds, record[1])[0] != 'loser':
-                write_records(f"{args.output_base_name}_passed.fq", record)
-            else:
-                write_records(f"{args.output_base_name}_failed.fq", record)
-
-        if args.gc_bounds:  # для ГЦ-контента
-            if gc_bounds(args.gc_bounds, record[1])[0] != 'loser':
-                write_records(f"{args.output_base_name}_passed.fq", record)
-
-        if args.min_length and args.gc_bounds:  # сувмещаем
+        if args.min_length and args.gc_bounds and not args.keep_filtered:  # сувмещаем без сохранения
             if (gc_bounds(args.gc_bounds, record[1])[0] != 'loser') and \
                     (minlen(args.min_length, record[1])[0] != 'loser'):
                 write_records(f"{args.output_base_name}_passed.fq", record)
 
-        if args.min_length and args.gc_bounds: # сувмещаем с сохранением
-            if (gc_bounds(args.gc_bounds, record[1])[0] != 'loser') and (minlen(args.min_length, record[1])[0] != 'loser'):
+        if args.min_length and args.gc_bounds and args.keep_filtered:  # сувмещаем с сохранением
+            if (gc_bounds(args.gc_bounds, record[1])[0] != 'loser') and \
+                    (minlen(args.min_length, record[1])[0] != 'loser'):
                 write_records(f"{args.output_base_name}_passed.fq", record)
             else:
                 write_records(f"{args.output_base_name}_failed.fq", record)
+
+        if args.min_length and args.keep_filtered and not args.gc_bounds:  # дли минимальной длины с сохранением
+            if minlen(args.min_length, record[1])[0] != 'loser':
+                write_records(f"{args.output_base_name}_passed.fq", record)
+            else:
+                write_records(f"{args.output_base_name}_failed.fq", record)
+
+        if args.min_length and not args.keep_filtered and not args.gc_bounds:  # для минимальной длины без сохранения
+            if minlen(args.min_length, record[1])[0] != 'loser':
+                write_records(f"{args.output_base_name}_passed.fq", record)
+
+        if args.gc_bounds and args.keep_filtered and not args.min_length:  # для ГЦ-контента с сохранинением
+            if gc_bounds(args.gc_bounds, record[1])[0] != 'loser':
+                write_records(f"{args.output_base_name}_passed.fq", record)
+            else:
+                write_records(f"{args.output_base_name}_failed.fq", record)
+
+        if args.gc_bounds and not args.keep_filtered and not args.min_length:  # для ГЦ-контента без сохранения
+            if gc_bounds(args.gc_bounds, record[1])[0] != 'loser':
+                write_records(f"{args.output_base_name}_passed.fq", record)
