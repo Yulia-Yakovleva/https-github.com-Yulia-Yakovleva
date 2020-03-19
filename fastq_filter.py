@@ -1,6 +1,7 @@
 import argparse
 import os.path
 
+
 def write_records(out_file, rec):
     with open(out_file, 'a') as out_f:
         out_f.write(rec[0] + '\n')
@@ -24,7 +25,8 @@ def gc_content(sequence):
 
 
 def gc_bounds(bounds_list, sequence):
-    # отсортируем на всякий случай, если юзер перепутает местами большее и меньшее значение
+    # отсортируем на всякий случай, если юзер перепутает местами большее и
+    # меньшее значение
     bounds_list.sort()
     if len(bounds_list) == 0:
         pass  # нам ведь просто с этим ничего не надо делать...
@@ -41,6 +43,7 @@ def gc_bounds(bounds_list, sequence):
             return sequence, 'loser'
         else:
             return 'loser', sequence
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process arguments from user')
