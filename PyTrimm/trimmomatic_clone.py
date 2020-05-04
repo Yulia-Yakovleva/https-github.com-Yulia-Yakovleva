@@ -29,8 +29,6 @@ def gc_content(sequence):
 def gc_bounds(sequence, bounds_list):
     if bounds_list is None or len(bounds_list) == 0:
         return True
-    # отсортируем на всякий случай, если юзер перепутает местами большее и меньшее значение
-    bounds_list.sort()
     if len(bounds_list) > 2:
         raise ValueError('The number of borders cannot be more than two')
     if len(bounds_list) == 1:
@@ -39,11 +37,14 @@ def gc_bounds(sequence, bounds_list):
         else:
             return False
     if len(bounds_list) == 2:
-        if (gc_content(sequence) <= bounds_list[1]) and \
-                (gc_content(sequence) >= bounds_list[0]):
-            return True
+        if bounds_list[1] < bounds_list[0]:
+            raise ValueError('Right bound is less, than left')
         else:
-            return False
+            if (gc_content(sequence) <= bounds_list[1]) and \
+                    (gc_content(sequence) >= bounds_list[0]):
+                return True
+            else:
+                return False
 
 
 # вводим правила кодировки качество ASCII->Symbol->Q-score (это phred33 кодировка)
