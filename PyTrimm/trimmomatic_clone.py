@@ -2,7 +2,7 @@ import argparse
 import os.path
 
 
-def write_records(out_file, rec):
+def write_record(out_file, rec):
     with open(out_file, 'a') as out_f:
         out_f.write(rec[0] + '\n')
         out_f.write(rec[1] + '\n')
@@ -190,7 +190,7 @@ if __name__ == "__main__":
             if len(bases) == 0:  # рид нулевой длины. либо не пишем ничего, либо пишем в дропнутые исходник
                 if args.keep_filtered:
                     droped_read = name, seq, qual
-                    write_records(f"{args.output_base_name}_failed.fq", droped_read)
+                    write_record(f"{args.output_base_name}_failed.fq", droped_read)
                     failed_reads += 1
             else:  # рид ненулевой длины, проверяем, пройдет ли фильтрацию?
                 if check_gc_and_len_surviving(seq, args.gc_bounds, args.min_length) is True:
@@ -198,18 +198,18 @@ if __name__ == "__main__":
                     surv_read = name, bases, qual
                     if not args.keep_filtered:
                         # дропнутые не пишем, просто сохраняем выживший рид без расширения .fq
-                        write_records(f"{args.output_base_name}", surv_read)
+                        write_record(f"{args.output_base_name}", surv_read)
                         passed_reads += 1
                     else:
                         # сохраняем выжившие как _passed.fq
-                        write_records(f"{args.output_base_name}_passed.fq", surv_read)
+                        write_record(f"{args.output_base_name}_passed.fq", surv_read)
                         passed_reads += 1
                 elif check_gc_and_len_surviving(seq, args.gc_bounds, args.min_length) is False:
                     # рид не прошел фильтрацию, как сохранять?
                     droped_read = name, seq, qual
                     # сохраняем как _failed.fq
                     if args.keep_filtered:
-                        write_records(f"{args.output_base_name}_failed.fq", droped_read)
+                        write_record(f"{args.output_base_name}_failed.fq", droped_read)
                         failed_reads += 1
 
 
