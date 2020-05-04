@@ -146,6 +146,9 @@ if __name__ == "__main__":
 
     if not args.output_base_name:  # разбираемся с названием по умолчанию
         args.output_base_name = args.input_file.rstrip('.fastq')
+        print(args.output_base_name + ' processing... Wait...')
+    else:
+        print(args.output_base_name + ' processing... Wait...')
 
     if os.path.exists(args.output_base_name + '_passed.fq'):  # проверка предсуществующих файлов
         os.remove(args.output_base_name + '_passed.fq')
