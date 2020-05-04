@@ -117,7 +117,7 @@ def check_gc_and_len_surviving(sequence, bounds_list, n):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Process arguments from user')
+    parser = argparse.ArgumentParser(description='Filters reads from fastq file')
     parser.add_argument('-crop', '--crop', type=int,
                         help='Cut the read to a specified length.')
     parser.add_argument('-gc', '--gc_bounds', type=int, nargs='*',
