@@ -157,7 +157,7 @@ if __name__ == "__main__":
     if os.path.exists(args.output_base_name):
         os.remove(args.output_base_name)
 
-    with open(args.input_file, "r") as in_f:  # читаем наш fastq файл
+    with open(args.input_file, "r") as in_f:
         total_reads = 0
         passed_reads = 0
         failed_reads = 0
