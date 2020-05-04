@@ -10,7 +10,7 @@ def write_record(out_file, rec):
         out_f.write(rec[2] + '\n')
 
 
-def minlen(sequence, n):
+def partition_by_length(sequence, n):
     if n is None:
         return True
     if len(sequence) >= n:
@@ -109,7 +109,7 @@ def sliding_window(params, sequence, quality):
 
 
 def check_gc_and_len_surviving(sequence, bounds_list, n):
-    if gc_bounds(sequence, bounds_list) and minlen(sequence, n):
+    if gc_bounds(sequence, bounds_list) and partition_by_length(sequence, n):
         return True
     else:
         return False
