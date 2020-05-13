@@ -7,12 +7,12 @@ class FastqFilterTest(unittest.TestCase):
     def test_minlen_with_good_seq(self):
         threshold = 10
         seq = 'GCGCTATAGCGCTATA'
-        self.assertTrue(trimmomatic_clone.minlen(seq, threshold))
+        self.assertTrue(trimmomatic_clone.partition_by_length(seq, threshold))
 
     def test_minlen_bad_seq(self):
         threshold = 10
         seq = 'GCGCTATA'
-        self.assertFalse(trimmomatic_clone.minlen(seq, threshold))
+        self.assertFalse(trimmomatic_clone.partition_by_length(seq, threshold))
 
     def test_gc_content(self):
         seq = 'GCGCTATA'
